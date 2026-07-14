@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "buildCommand": "echo 'build complete'",
+  "devCommand": "vercel dev",
+  "installCommand": "echo 'install complete'"
+}

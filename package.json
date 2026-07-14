@@ -1,0 +1,14 @@
+{
+  "name": "meta-ads-generator",
+  "version": "1.0.0",
+  "description": "Generador de Campañas Meta Ads",
+  "main": "api/generate-copies.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Build complete'"
+  },
+  "keywords": ["meta-ads", "campaigns", "generator"],
+  "author": "Grafico Pauta",
+  "license": "MIT",
+  "dependencies": {}
+}

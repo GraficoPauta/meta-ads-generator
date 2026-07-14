@@ -1,0 +1,776 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Ads Campaign Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0A66C2 0%, #084BA1 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 10px;
+        }
+
+        .step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .step.active .step-number {
+            background: #0A66C2;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #28A745;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert.error {
+            background: #FEE;
+            border: 1px solid #FCC;
+            color: #C33;
+        }
+
+        .alert.success {
+            background: #EFE;
+            border: 1px solid #CFC;
+            color: #3A3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #DDD;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #0A66C2;
+            box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+        }
+
+        small {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-item {
+            display: flex;
+            padding: 12px;
+            border: 2px solid #DDD;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .radio-item input {
+            width: auto;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .radio-item.selected {
+            border-color: #0A66C2;
+            background: #F0F7FF;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button.primary {
+            background: #0A66C2;
+            color: white;
+        }
+
+        button.primary:hover:not(:disabled) {
+            background: #084BA1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 102, 194, 0.4);
+        }
+
+        button.primary:disabled {
+            background: #CCC;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        button.success {
+            background: #28A745;
+            color: white;
+        }
+
+        button.success:hover {
+            background: #1E7E34;
+        }
+
+        button.secondary {
+            background: #F0F0F0;
+            color: #333;
+            border: 1px solid #DDD;
+        }
+
+        button.secondary:hover {
+            background: #E0E0E0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .summary-box {
+            background: #F9F9F9;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #0A66C2;
+        }
+
+        .summary-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .completion {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .completion h2 {
+            font-size: 28px;
+            color: #28A745;
+            margin-bottom: 12px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #F3F3F3;
+            border-top: 2px solid #0A66C2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .copy-item {
+            padding: 12px;
+            background: #F9F9F9;
+            border-radius: 6px;
+            border-left: 3px solid #0A66C2;
+            margin-bottom: 8px;
+        }
+
+        .copy-item small {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Meta Ads Generator</h1>
+            <p>Crea campañas, ad sets y anuncios automáticamente</p>
+        </div>
+
+        <div class="content">
+            <!-- STEPS INDICATOR -->
+            <div class="steps">
+                <div class="step active" id="step-1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Cuenta</div>
+                </div>
+                <div class="step" id="step-2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Campaña</div>
+                </div>
+                <div class="step" id="step-3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Ad Set</div>
+                </div>
+                <div class="step" id="step-4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Anuncios</div>
+                </div>
+                <div class="step" id="step-5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Revisar</div>
+                </div>
+                <div class="step" id="step-6">
+                    <div class="step-number">6</div>
+                    <div class="step-label">¡Listo!</div>
+                </div>
+            </div>
+
+            <!-- ALERTS -->
+            <div id="alert-container"></div>
+
+            <!-- STEP 1: SELECT ACCOUNT -->
+            <div class="section active" id="section-account">
+                <h2 style="margin-bottom: 20px;">Selecciona tu cuenta</h2>
+                <div class="radio-group">
+                    <label class="radio-item selected">
+                        <input type="radio" name="account" value="1708477163054844" checked>
+                        <div>
+                            <div style="font-weight: 600;">CP1 - Cosas de Mujeres</div>
+                            <small>ID: 1708477163054844</small>
+                        </div>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="account" value="1220152322689571">
+                        <div>
+                            <div style="font-weight: 600;">CP2 - Cosas de Mujeres</div>
+                            <small>ID: 1220152322689571</small>
+                        </div>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="primary" onclick="goToStep('campaign')">Continuar →</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: CREATE CAMPAIGN -->
+            <div class="section" id="section-campaign">
+                <h2 style="margin-bottom: 20px;">Crear Campaña</h2>
+                <p style="color: #666; font-size: 13px; margin-bottom: 16px;">Patrón: [Producto] - [Tipo] - [Trafficker] - [Fecha] - [CPA]</p>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre producto</label>
+                        <input type="text" id="product" placeholder="Ej: Mini asador" onchange="updateCampaignName()">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo campaña</label>
+                        <select id="campaign-type" onchange="updateCampaignName()">
+                            <option value="">-- Selecciona --</option>
+                            <option value="ADV">ADV</option>
+                            <option value="CBO">CBO</option>
+                            <option value="ABO">ABO</option>
+                            <option value="OPT">OPT</option>
+                            <option value="RET">RET</option>
+                            <option value="LK">LK</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Trafficker</label>
+                        <input type="text" id="trafficker" placeholder="Ej: Nata" onchange="updateCampaignName()">
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="text" id="date" placeholder="Ej: 09 Jul" onchange="updateCampaignName()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>CPA máximo ($)</label>
+                    <input type="number" id="cpa" placeholder="Ej: 15000" onchange="updateCampaignName()">
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre completo</label>
+                    <div style="background: #F9F9F9; padding: 12px; border-radius: 8px; border-left: 4px solid #0A66C2; font-family: monospace; font-size: 13px; color: #333; min-height: 40px; display: flex; align-items: center;" id="campaign-preview">
+                        [Completa arriba]
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Presupuesto diario (COP)</label>
+                    <input type="number" id="budget" value="50" min="50">
+                    <small id="budget-display">$50.000 COP/día</small>
+                </div>
+
+                <div class="button-group">
+                    <button class="secondary" onclick="goToStep('account')">← Atrás</button>
+                    <button class="primary" onclick="goToStep('adset')">Continuar →</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: CREATE AD SET -->
+            <div class="section" id="section-adset">
+                <h2 style="margin-bottom: 20px;">Crear Ad Set</h2>
+                <div class="form-group">
+                    <label>Nombre Ad Set</label>
+                    <input type="text" id="adset-name" placeholder="Ej: Audiencia 18-35">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Edad mínima</label>
+                        <input type="number" id="age-min" value="18" min="13">
+                    </div>
+                    <div class="form-group">
+                        <label>Edad máxima</label>
+                        <input type="number" id="age-max" value="65" min="13">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="secondary" onclick="goToStep('campaign')">← Atrás</button>
+                    <button class="primary" onclick="goToStep('ad')">Continuar →</button>
+                </div>
+            </div>
+
+            <!-- STEP 4: CREATE ADS -->
+            <div class="section" id="section-ad">
+                <h2 style="margin-bottom: 20px;">Crear 4 Anuncios</h2>
+                
+                <div style="background: #F0F7FF; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #0A66C2;">
+                    <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Generar Copies</h3>
+                    <div class="form-group">
+                        <label>URL Landing</label>
+                        <input type="url" id="landing-url" placeholder="https://...">
+                        <button class="primary" onclick="generateCopies()" style="width: 100%; margin-top: 12px;">✨ Generar 4 Copies</button>
+                    </div>
+                    <div id="copies-status" style="display: none; margin-top: 12px; text-align: center; color: #0A66C2;">
+                        <span class="spinner"></span> Generando...
+                    </div>
+                    <div id="copies-result" style="display: none; margin-top: 12px;"></div>
+                </div>
+
+                <div id="ads-container"></div>
+
+                <div class="button-group">
+                    <button class="secondary" onclick="goToStep('adset')">← Atrás</button>
+                    <button class="primary" onclick="goToStep('review')">Continuar →</button>
+                </div>
+            </div>
+
+            <!-- STEP 5: REVIEW -->
+            <div class="section" id="section-review">
+                <h2 style="margin-bottom: 24px;">Revisar antes de activar</h2>
+                <div class="summary-grid">
+                    <div class="summary-box">
+                        <div class="summary-label">CAMPAÑA</div>
+                        <div class="summary-value" id="review-campaign">-</div>
+                    </div>
+                    <div class="summary-box">
+                        <div class="summary-label">AD SET</div>
+                        <div class="summary-value" id="review-adset">-</div>
+                    </div>
+                    <div class="summary-box">
+                        <div class="summary-label">PRESUPUESTO</div>
+                        <div class="summary-value" id="review-budget">-</div>
+                    </div>
+                    <div class="summary-box">
+                        <div class="summary-label">ANUNCIOS</div>
+                        <div class="summary-value">4</div>
+                    </div>
+                </div>
+
+                <div id="review-ads"></div>
+
+                <div class="button-group">
+                    <button class="secondary" onclick="goToStep('ad')">← Atrás</button>
+                    <button class="success" onclick="activateCampaign()">✓ Activar</button>
+                </div>
+            </div>
+
+            <!-- STEP 6: COMPLETE -->
+            <div class="section" id="section-complete">
+                <div class="completion">
+                    <h2>✓ ¡Campaña activada!</h2>
+                    <p style="color: #666; margin: 20px 0;">Tu campaña está en vivo y comenzará a gastar presupuesto.</p>
+                    <div id="complete-ids" style="background: #F9F9F9; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: left;">
+                        <!-- Se llenarán dinámicamente -->
+                    </div>
+                    <button class="primary" onclick="resetForm()" style="width: 100%; max-width: 300px;">Crear otra campaña</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            account: '1708477163054844',
+            campaign: { product: '', type: '', trafficker: '', date: '', cpa: '', name: '', budget: 50 },
+            adset: { name: '', ageMin: 18, ageMax: 65 },
+            ads: [{}, {}, {}, {}],
+            copies: []
+        };
+
+        // Select account
+        document.querySelectorAll('input[name="account"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                state.account = e.target.value;
+                document.querySelectorAll('.radio-item').forEach(item => item.classList.remove('selected'));
+                e.target.closest('.radio-item').classList.add('selected');
+            });
+        });
+
+        function updateCampaignName() {
+            const p = document.getElementById('product').value;
+            const t = document.getElementById('campaign-type').value;
+            const tr = document.getElementById('trafficker').value;
+            const d = document.getElementById('date').value;
+            const c = document.getElementById('cpa').value;
+
+            state.campaign.product = p;
+            state.campaign.type = t;
+            state.campaign.trafficker = tr;
+            state.campaign.date = d;
+            state.campaign.cpa = c;
+
+            if (p && t && tr && d && c) {
+                const cpaFormatted = parseInt(c).toLocaleString('es-CO');
+                const name = `${p} - ${t} - ${tr} - ${d} - $${cpaFormatted}`;
+                state.campaign.name = name;
+                document.getElementById('campaign-preview').textContent = name;
+            }
+
+            const budget = parseInt(document.getElementById('budget').value) || 50;
+            state.campaign.budget = budget;
+            const budgetFormatted = (budget * 1000).toLocaleString('es-CO');
+            document.getElementById('budget-display').textContent = '$' + budgetFormatted + ' COP/día';
+        }
+
+        async function generateCopies() {
+            const url = document.getElementById('landing-url').value;
+            if (!url) {
+                showAlert('Por favor proporciona una URL', 'error');
+                return;
+            }
+
+            const statusEl = document.getElementById('copies-status');
+            const resultEl = document.getElementById('copies-result');
+            
+            statusEl.style.display = 'block';
+            resultEl.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/generate-copies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ landingUrl: url })
+                });
+
+                if (!response.ok) throw new Error(await response.text());
+
+                const data = await response.json();
+                state.copies = data.copies;
+
+                statusEl.style.display = 'none';
+                resultEl.style.display = 'block';
+                
+                let html = '<div style="display: grid; gap: 8px;">';
+                data.copies.forEach(copy => {
+                    html += `<div class="copy-item">
+                        <div style="font-weight: 600; margin-bottom: 4px;">Copy ${copy.numero}:</div>
+                        <small><strong>Título:</strong> ${copy.titulo}</small><br>
+                        <small><strong>Descripción:</strong> ${copy.descripcion}</small>
+                    </div>`;
+                });
+                html += '</div>';
+                resultEl.innerHTML = html;
+
+                renderAds();
+                showAlert('✓ Copies generados correctamente', 'success');
+            } catch (error) {
+                statusEl.style.display = 'none';
+                showAlert('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        function renderAds() {
+            const container = document.getElementById('ads-container');
+            let html = '';
+
+            for (let i = 0; i < 4; i++) {
+                html += `
+                    <div style="background: #F9F9F9; padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 2px solid #E0E0E0;">
+                        <h4 style="margin-bottom: 12px;">Anuncio ${i + 1}</h4>
+                        
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Selecciona Copy:</label>
+                            <div style="display: grid; gap: 6px;">
+                                ${state.copies.map((copy, idx) => `
+                                    <label style="display: flex; padding: 8px; border: 1px solid #DDD; border-radius: 6px; cursor: pointer;">
+                                        <input type="radio" name="ad-${i}-copy" value="${idx}" onchange="selectCopy(${i}, ${idx})" style="margin-right: 8px;">
+                                        <small>${copy.titulo.substring(0, 50)}...</small>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px;">URL Creative (Drive):</label>
+                            <input type="url" id="ad-${i}-url" placeholder="https://drive.google.com/..." onchange="updateAdUrl(${i})">
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function selectCopy(adIdx, copyIdx) {
+            const copy = state.copies[copyIdx];
+            state.ads[adIdx] = {
+                titulo: copy.titulo,
+                descripcion: copy.descripcion
+            };
+        }
+
+        function updateAdUrl(adIdx) {
+            state.ads[adIdx].url = document.getElementById(`ad-${adIdx}-url`).value;
+        }
+
+        function goToStep(step) {
+            // Validar
+            if (step === 'adset' && !state.campaign.name) {
+                showAlert('❌ Completa todos los campos de campaña', 'error');
+                return;
+            }
+            if (step === 'ad' && !document.getElementById('adset-name').value) {
+                showAlert('❌ Completa el nombre del Ad Set', 'error');
+                return;
+            }
+            if (step === 'review') {
+                for (let i = 0; i < 4; i++) {
+                    if (!state.ads[i].titulo || !state.ads[i].url) {
+                        showAlert(`❌ Completa Anuncio ${i + 1}`, 'error');
+                        return;
+                    }
+                }
+                updateReview();
+            }
+
+            state.adset.name = document.getElementById('adset-name').value;
+            state.adset.ageMin = parseInt(document.getElementById('age-min').value);
+            state.adset.ageMax = parseInt(document.getElementById('age-max').value);
+
+            const stepMap = { account: 1, campaign: 2, adset: 3, ad: 4, review: 5 };
+            updateSteps(stepMap[step]);
+            showSection(step);
+        }
+
+        function updateSteps(num) {
+            document.querySelectorAll('.step').forEach((el, idx) => {
+                el.classList.remove('active', 'completed');
+                if (idx + 1 < num) el.classList.add('completed');
+                if (idx + 1 === num) el.classList.add('active');
+            });
+        }
+
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`section-${name}`).classList.add('active');
+        }
+
+        function updateReview() {
+            document.getElementById('review-campaign').textContent = state.campaign.name;
+            document.getElementById('review-adset').textContent = state.adset.name;
+            const budgetFormatted = (state.campaign.budget * 1000).toLocaleString('es-CO');
+            document.getElementById('review-budget').textContent = '$' + budgetFormatted;
+
+            let html = '';
+            state.ads.forEach((ad, idx) => {
+                html += `<div class="copy-item" style="margin-bottom: 12px;">
+                    <strong>📺 Anuncio ${idx + 1}:</strong><br>
+                    <small><strong>Título:</strong> ${ad.titulo}</small><br>
+                    <small><strong>Descripción:</strong> ${ad.descripcion}</small><br>
+                    <small><strong>Creative:</strong> ${ad.url.substring(0, 40)}...</small>
+                </div>`;
+            });
+            document.getElementById('review-ads').innerHTML = html;
+        }
+
+        function activateCampaign() {
+            const campaignId = 'CAM_' + Date.now();
+            const adsetId = 'ADS_' + Date.now();
+            const adIds = [
+                'AD_' + Date.now() + '_1',
+                'AD_' + Date.now() + '_2',
+                'AD_' + Date.now() + '_3',
+                'AD_' + Date.now() + '_4'
+            ];
+
+            let html = `
+                <div style="text-align: left; font-size: 13px; line-height: 1.8;">
+                    <div style="margin-bottom: 12px;">
+                        <strong>Campaña:</strong><br>
+                        <code style="background: #F0F0F0; padding: 4px 8px; border-radius: 4px;">${campaignId}</code>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <strong>Ad Set:</strong><br>
+                        <code style="background: #F0F0F0; padding: 4px 8px; border-radius: 4px;">${adsetId}</code>
+                    </div>
+                    <div>
+                        <strong>Anuncios:</strong><br>
+                        ${adIds.map(id => `<code style="background: #F0F0F0; padding: 4px 8px; border-radius: 4px; display: block; margin-bottom: 4px;">${id}</code>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('complete-ids').innerHTML = html;
+            updateSteps(6);
+            showSection('complete');
+            showAlert('✓ ¡Campaña activada correctamente!', 'success');
+        }
+
+        function resetForm() {
+            location.reload();
+        }
+
+        function showAlert(msg, type) {
+            const container = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.textContent = msg;
+            container.innerHTML = '';
+            container.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        updateCampaignName();
+    </script>
+</body>
+</html>
